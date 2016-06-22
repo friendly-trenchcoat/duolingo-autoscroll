@@ -6,11 +6,20 @@
 // @require	       http://code.jquery.com/jquery-latest.min.js
 // ==/UserScript==
 
-setInterval(function() { // this is becuase duo doesnt reload the page when going between tabs
-    // NOTE: eq(0) means, use the first non-gold icon. If you want to go to the second, use eq(1); the third, eq(2); etc.
-    var element = $("span[class*='unlocked']").eq(0).parent().parent().parent().prev(); 
-    
-    $('html, body').animate({
-        scrollTop: $(element).offset().top
-    }, 2000);
-}, 2000);
+var n = 2; // USERS NOTE: If you want to skip one skill, set to 1; if you want to skip two, set to 2; etc.
+var autoscroll = 1; // scroll on page load
+
+setInterval(function() { // check every second
+    // if not defined or you are not on the main page, set it to scroll
+    if(document.body.innerHTML.search('Daily Goal') == -1){
+        autoscroll = 1;
+    }
+    // else if on main page and set to scroll
+    else if(document.body.innerHTML.search('Daily Goal') !== -1 && autoscroll == 1){
+        var element = $("span[class*='unlocked']").eq(n).parent().parent().parent().prev();
+        $('html, body').animate({
+            scrollTop: $(element).offset().top
+        }, 2000);
+        autoscroll = 0;
+    }
+}, 1000);
